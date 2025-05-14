@@ -117,19 +117,22 @@
     <!-- Komentar akan muncul di sini -->
   </div>
 
-  <script>
-document.getElementById("commentForm").addEventListener("submit", function(e) {
+<script>
+document.getElementById("commentForm").addEventListener("submit", function (e) {
   e.preventDefault();
 
   const name = document.getElementById("username").value.trim();
   const comment = document.getElementById("usercomment").value.trim();
 
-  if (name.toLowerCase() === "reset") {
-    // Jika user menulis "reset" sebagai nama, form akan dikosongkan
-    document.getElementById("commentForm").reset();
-    alert("Form telah direset karena nama 'reset' diketik.");
-    return; // hentikan proses menambahkan komentar
-  }
+if (name.toLowerCase() === "reset") {
+  document.getElementById("commentForm").reset();
+  localStorage.removeItem("hasCommented");
+  localStorage.removeItem("comments"); // bersihkan semua komentar
+  document.getElementById("comment-section").innerHTML = ""; // hapus komentar di tampilan
+  alert("Semua komentar dan status form telah direset.");
+  return;
+}
+
 
   if (name && comment) {
     const commentBox = document.createElement("div");
@@ -138,10 +141,25 @@ document.getElementById("commentForm").addEventListener("submit", function(e) {
 
     document.getElementById("comment-section").appendChild(commentBox);
 
-    // Form tidak direset secara otomatis kecuali syarat "reset" di atas
+    // Simpan ke localStorage
+    const savedComments = JSON.parse(localStorage.getItem("comments")) || [];
+    savedComments.push({ name, comment });
+    localStorage.setItem("comments", JSON.stringify(savedComments));
+    localStorage.setItem("hasCommented", "true");
+
+    // Tampilkan pesan terima kasih
+    const thanksMsg = document.createElement("p");
+    thanksMsg.textContent = "Terima kasih atas komentar Anda!";
+    thanksMsg.style.color = "green";
+    thanksMsg.style.fontWeight = "bold";
+    document.getElementById("commentForm").appendChild(thanksMsg);
+
+    // Nonaktifkan form agar tidak bisa komentar lagi
+    disableForm();
   }
 });
 
-  </script>
+</script>
+
 </body>
 </html>
