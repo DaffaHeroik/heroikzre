@@ -10,7 +10,9 @@
     
         <link rel="stylesheet" href="style.css">
         <link rel="icon" type="image/png" href="favicon.png">
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
         
     
         <script src="script.js"></script>
@@ -18,6 +20,26 @@
     
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 <style>
+    
+        .profile-container {
+      text-align: center;
+      margin-top: 50px;
+    }
+
+    .profile-img {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%; /* agar gambar jadi lingkaran */
+      object-fit: cover; /* agar tidak gepeng */
+      border: 3px solid #4CAF50; /* garis tepi hijau */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* bayangan */
+    }
+
+    .profile-name {
+      font-family: 'Share Tech', sans-serif;
+      font-size: 20px;
+      margin-top: 10px;
+    }
     body {
         font-family: 'Roboto', Arial;
         margin: 20px;
@@ -30,14 +52,40 @@
         border-radius: 5px;
         cursor: pointer;
     }
+            .wa-link {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            background-color: #000000;
+            color: rgb(255, 255, 255);
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-family: Arial;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
 </style>
 <body>
     <h1>Halaman Profile</h1>
     <p>Selamat datang di Halaman Profile</p>
+    
+          <div class="profile-container">
+    <img src="wa.jpg" alt="Foto Profil" class="profile-img">
+    <div class="profile-name"> Heroikzre</div>
+  </div>
+  <center>
+        <a class="wa-link" href="https://wa.me/6282340243800" target="_blank">
+        <img src="wabg.jpg" alt="WhatsApp" width="50" height="50">
+        Hubungi Kami Di Whatsapp    
+    </a>
+    </center>
+
+<br><br><br><br><br>
     <center>
         <button onclick="location.href = 'index.html'">Kembali</button>
     </center>
-    <br><br><br> <br><br><br> <br><br><br> <br><br><br> <br><br><br> <br><br><br> <br><br><br>
+<br><br><br> <br><br><br> <br><br><br> <br><br><br> <br><br><br> <br><br><br> <br><br><br>
 </body>
 
 </html>
