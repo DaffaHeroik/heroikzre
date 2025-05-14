@@ -118,23 +118,30 @@
   </div>
 
   <script>
-    document.getElementById("commentForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+document.getElementById("commentForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-      const name = document.getElementById("username").value.trim();
-      const comment = document.getElementById("usercomment").value.trim();
+  const name = document.getElementById("username").value.trim();
+  const comment = document.getElementById("usercomment").value.trim();
 
-      if (name && comment) {
-        const commentBox = document.createElement("div");
-        commentBox.className = "comment";
-        commentBox.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
+  if (name.toLowerCase() === "reset") {
+    // Jika user menulis "reset" sebagai nama, form akan dikosongkan
+    document.getElementById("commentForm").reset();
+    alert("Form telah direset karena nama 'reset' diketik.");
+    return; // hentikan proses menambahkan komentar
+  }
 
-        document.getElementById("comment-section").appendChild(commentBox);
+  if (name && comment) {
+    const commentBox = document.createElement("div");
+    commentBox.className = "comment";
+    commentBox.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
 
-        // Reset form
-        document.getElementById("commentForm").reset();
-      }
-    });
+    document.getElementById("comment-section").appendChild(commentBox);
+
+    // Form tidak direset secara otomatis kecuali syarat "reset" di atas
+  }
+});
+
   </script>
 </body>
 </html>
