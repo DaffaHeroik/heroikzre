@@ -147,6 +147,11 @@ if (name.toLowerCase() === "reset") {
     localStorage.setItem("comments", JSON.stringify(savedComments));
     localStorage.setItem("hasCommented", "true");
 
+
+  console.log("Komentar baru ditambahkan:");
+  console.log("Nama:", name);
+  console.log("Komentar:", comment);
+
     // Tampilkan pesan terima kasih
     const thanksMsg = document.createElement("p");
     thanksMsg.textContent = "Terima kasih atas komentar Anda!";
