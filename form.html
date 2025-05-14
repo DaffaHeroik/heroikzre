@@ -117,54 +117,33 @@
     <!-- Komentar akan muncul di sini -->
   </div>
 
-<script>
-document.getElementById("commentForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+  <script>
+    // Menangani pengiriman form
+    document.getElementById("commentForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
 
-  const name = document.getElementById("username").value.trim();
-  const comment = document.getElementById("usercomment").value.trim();
+      const name = document.getElementById("username").value;
+      const comment = document.getElementById("usercomment").value;
 
-if (name.toLowerCase() === "reset") {
-  document.getElementById("commentForm").reset();
-  localStorage.removeItem("hasCommented");
-  localStorage.removeItem("comments"); // bersihkan semua komentar
-  document.getElementById("comment-section").innerHTML = ""; // hapus komentar di tampilan
-  alert("Semua komentar dan status form telah direset.");
-  return;
-}
+      // Kirim data ke API endpoint
+      const response = await fetch('/api/comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, comment }),
+      });
 
+      const result = await response.json();
 
-  if (name && comment) {
-    const commentBox = document.createElement("div");
-    commentBox.className = "comment";
-    commentBox.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
-
-    document.getElementById("comment-section").appendChild(commentBox);
-
-    // Simpan ke localStorage
-    const savedComments = JSON.parse(localStorage.getItem("comments")) || [];
-    savedComments.push({ name, comment });
-    localStorage.setItem("comments", JSON.stringify(savedComments));
-    localStorage.setItem("hasCommented", "true");
-
-
-  console.log("Komentar baru ditambahkan:");
-  console.log("Nama:", name);
-  console.log("Komentar:", comment);
-
-    // Tampilkan pesan terima kasih
-    const thanksMsg = document.createElement("p");
-    thanksMsg.textContent = "Terima kasih atas komentar Anda!";
-    thanksMsg.style.color = "green";
-    thanksMsg.style.fontWeight = "bold";
-    document.getElementById("commentForm").appendChild(thanksMsg);
-
-    // Nonaktifkan form agar tidak bisa komentar lagi
-    disableForm();
-  }
-});
-
-</script>
+      // Tampilkan pesan sukses atau error
+      alert(result.message);
+      if (result.message === 'Komentar berhasil disimpan!') {
+        // Reset form setelah sukses
+        document.getElementById("commentForm").reset();
+      }
+    });
+  </script>
 
 </body>
 </html>
