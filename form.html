@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+      <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet" />
+
+  <meta charset="UTF-8">
+  <title>Form Komentar</title>
+  <style>
+        .navbar {
+      background-color: #ffffff;
+      padding: 12px 30px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      width: 100%;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #3366cc;
+      background-color: #e6f0ff;
+      padding: 10px 18px;
+      margin: 0 10px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .navbar a:hover {
+      background-color: #cce0ff;
+      color: #003399;
+      transform: translateY(-2px);
+    }
+
+    .navbar a.active {
+      background-color: #003399;
+      color: #ffffff;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+    h2,h3 {
+        text-align: left;
+        padding-left: 20px;
+        margin-top: 20px;
+        color: #333;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0px;
+    }
+    form{
+        text-align: left;
+        padding-left: 20px;
+        margin-top: 20px;
+    }
+    #comment-section {
+      margin-top: 20px;
+      padding-left: 20px;
+    }
+    p{
+        font-family: 'Share Tech', 'Arial', sans-serif;
+        margin-top: 20px;
+        padding-left: 20px;
+    }
+    .comment {
+        padding-left: 20px;
+      background: #f1f1f1;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    .button2 {
+      background-color: #003399;
+      color: #ffffff;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .button2:hover {
+      background-color: #23cc9f;
+    }
+    h1{
+        text-align: center;
+        margin-top: 20px;
+        margin-bottom: -10px;
+        color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="index.html" class="button">Beranda</a>
+    <a href="pajangan.html" class="button">Pajangan</a>
+    <a href="download.html" class="button">Download</a>
+    <a href="kontak.html" class="button">Kontak</a>
+    <a href="profile.html" class="button">Profil</a>
+    
+  </div>
+  <h1>Ruang Tersembunyi</h1>
+    <p>form ini dibuat oleh cintah gpt 80% dan penulis 5%, jangan ditanya sisanya kemana .</p>
+  
+  <h2>Silakan Tinggalkan Komentar</h2>
+
+  <form id="commentForm">
+    <input type="text" id="username" placeholder="Nama Anda" required><br><br>
+    <textarea id="usercomment" placeholder="Tulis komentar Anda di sini..." rows="4" cols="50" required></textarea><br><br>
+    <button type="submit">Kirim Komentar</button>
+  </form>
+
+  <h3>Komentar:</h3>
+  <div id="comment-section">
+    <!-- Komentar akan muncul di sini -->
+  </div>
+
+  <script>
+    document.getElementById("commentForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("username").value.trim();
+      const comment = document.getElementById("usercomment").value.trim();
+
+      if (name && comment) {
+        const commentBox = document.createElement("div");
+        commentBox.className = "comment";
+        commentBox.innerHTML = `<strong>${name}</strong><p>${comment}</p>`;
+
+        document.getElementById("comment-section").appendChild(commentBox);
+
+        // Reset form
+        document.getElementById("commentForm").reset();
+      }
+    });
+  </script>
+</body>
+</html>

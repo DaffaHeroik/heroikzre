@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing</title>
+
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&family=Share+Tech&display=swap" rel="stylesheet" />
+
+  <style>
+    main {
+  max-width: 960px;
+  margin: auto;
+  padding: 20px;
+}
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .navbar {
+      background-color: #ffffff;
+      padding: 12px 30px;
+      display: flex;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 999;
+      width: 100%;
+    }
+
+    .navbar a {
+      text-decoration: none;
+      color: #3366cc;
+      background-color: #e6f0ff;
+      padding: 10px 18px;
+      margin: 0 10px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+      font-size: 16px;
+    }
+
+    .navbar a:hover {
+      background-color: #cce0ff;
+      color: #003399;
+      transform: translateY(-2px);
+    }
+
+    .navbar a.active {
+      background-color: #003399;
+      color: #ffffff;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+      color: #333;
+    }
+
+    p {
+      font-family: 'Share Tech', 'Arial', sans-serif;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+
+    button, .button {
+      background-color: #0d1d6c;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border-radius: 10px;
+      z-index: 1000;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="popup">
+    <p>Selamat datang di halaman pamer!</p>
+    <button onclick="document.getElementById('popup').style.display='none'">Tutup</button>
+  </div>
+
+  <div class="navbar">
+    <a href="index.html" class ="button">Beranda</a>
+    <a href="pajangan.html" class="button active">Pajangan</a>
+    <a href="download.html"class ="button">Download</a>
+    <a href="kontak.html" class ="button">Kontak</a>
+    <a href="profile.html" class ="button">Profil</a>
+  </div>
+<main>
+  <h1>Halaman Pamer</h1>
+  <p>Gak ada yang bisa dipamerin , dia aja belum dapet @.@</p>
+</main>
+  <script>
+    window.onload = function() {
+      document.getElementById('popup').style.display = 'block';
+    };
+  </script>
+</body>
+</html>

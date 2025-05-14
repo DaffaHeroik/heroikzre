@@ -1,21 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testing</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
-    <style>
-        
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testing</title>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet" />
+
+  <!-- Icon -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+
+  <!-- Style -->
+  <style>
+    :root {
+      --primary-color: #003399;
+      --accent-color: #3366cc;
+      --bg-light: #e6f0ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Roboto', Arial, sans-serif;
+      padding: 0;
+      background-color: #fdfdfd;
+    }
+
     .navbar {
       background-color: #ffffff;
-      padding: 12px 20px;
+      padding: 12px 30px;
       display: flex;
       justify-content: center;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       position: sticky;
       top: 0;
       z-index: 999;
+      width: 100%;
     }
 
     .navbar a {
@@ -24,7 +50,7 @@
       background-color: #e6f0ff;
       padding: 10px 18px;
       margin: 0 10px;
-      border-radius: 12px;
+      border-radius: 10px;
       transition: all 0.3s ease;
       font-weight: 600;
       font-size: 16px;
@@ -36,49 +62,95 @@
       transform: translateY(-2px);
     }
 
+    .navbar a.active {
+      background-color: #003399;
+      color: #ffffff;
+      pointer-events: none;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    main {
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+    }
+
     h1 {
       text-align: center;
-      margin-top: 50px;
+      margin-top: 20px;
       color: #333;
     }
 
-    button, .button {
-        background-color: #0d1d6c;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
+    p {
+      font-family: 'Share Tech', 'Arial', sans-serif;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      padding-left: 20px;
     }
 
-    body {
-            font-family: 'Roboto' ,Arial ;
-            padding : 20px ;
-        }
-    </style>
+    button, .button {
+      background-color: #0d1d6c;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+     .button2 {
+      background-color: #000000;
+      color: rgb(255, 255, 255);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .navbar a {
+        width: 90%;
+        text-align: center;
+      }
+
+      main {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="navbar">
-        <a href = "NEW.html" class="button"> Testing</a> 
-        <a href="profile.html" class="button">Profile</a>
-        <a href="kontak.html" class="button">Kontak</a>
-        <a href="profile.html" class="button">Profil</a>
-        </a>
-    
 
-    </div>
-    
-    </div>
-    <h1>Haii, Kamu!</h1>
+  <div class="navbar">
+    <a href="index.html" class="button active">Beranda</a>
+    <a href="pajangan.html" class="button">Pajangan</a>
+    <a href="download.html" class="button">Download</a>
+    <a href="kontak.html" class="button">Kontak</a>
+    <a href="profile.html" class="button">Profil</a>
+  </div>
+
+  <main>
+    <h1>Halaman Beranda</h1>
     <p>Cuman Web Dasar Baru belajar om ._.</p>
-    
 
-        <br>
-    <p>tes</p>
-
-    
-
-    
+<center>
+  <br><br>
+    <a href="form.html" class="button2">Komen Websitenya </a>
+  </main>
 
 </body>
 </html>
