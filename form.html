@@ -118,31 +118,30 @@
   </div>
 
   <script>
-    // Menangani pengiriman form
-    document.getElementById("commentForm").addEventListener("submit", async function(e) {
-      e.preventDefault();
+document.getElementById("commentForm").addEventListener("submit", function(e) {
+  e.preventDefault();
 
-      const name = document.getElementById("username").value;
-      const comment = document.getElementById("usercomment").value;
+  const name = document.getElementById("username").value.trim();
+  const comment = document.getElementById("usercomment").value.trim();
 
-      // Kirim data ke API endpoint
-      const response = await fetch('/api/comment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ name, comment }),
-      });
-
-      const result = await response.json();
-
-      // Tampilkan pesan sukses atau error
-      alert(result.message);
-      if (result.message === 'Komentar berhasil disimpan!') {
-        // Reset form setelah sukses
-        document.getElementById("commentForm").reset();
-      }
+  if (name && comment) {
+    fetch('https://script.google.com/macros/s/AKfycbwKhOZPZ0Yu1SsY1RIlfABsb75_BF_KfhcJZj9LVHzyw5P-SFnB57yZrGZ-vnUUlgU/exec', {
+      method: 'POST',
+      contentType: 'application/json',
+      body: JSON.stringify({ name: name, comment: comment })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert('Komentar berhasil disimpan');
+      document.getElementById("commentForm").reset();
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      alert('Gagal menyimpan komentar');
     });
+  }
+});
+
   </script>
 
 </body>
