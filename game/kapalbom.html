@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tebak Kapal & Bom — Mini Game</title>
+    <style>
+        :root{--bg:#f6f9fc;--card:#ffffff;--accent:#0d47a1;--danger:#b00020;--ok:#2e7d32}
+        *{box-sizing:border-box}
+        body{font-family:Inter, Roboto, Arial, sans-serif;background:var(--bg);margin:0;padding:24px;color:#0b2540}
+        .wrap{max-width:900px;margin:0 auto}
+        header{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+        h1{font-size:20px;margin:0}
+        .controls{margin-left:auto;display:flex;gap:8px}
+        button{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+        button.secondary{background:#6c7a89}
+        main{display:grid;grid-template-columns:1fr 300px;gap:18px}
+        .board{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(11,37,64,0.06)}
+        .grid{display:grid;grid-template-columns:repeat(8,40px);gap:6px;justify-content:center}
+        .cell{width:40px;height:40px;background:#e9f0fb;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;font-weight:700;color:transparent}
+        .cell.revealed{background:#fff;cursor:default;color:#0b2540}
+        .cell.hit{background:var(--ok);color:#fff}
+        .cell.miss{background:#cfd8e3;color:#1d3557}
+        .cell.bomb{background:var(--danger);color:#fff}
+        .info{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(11,37,64,0.06);overflow-y:auto;max-height:600px}
+        .stat{display:flex;flex-direction:column;gap:8px}
+        .small{font-size:13px;color:#40546b}
+        .legend{display:flex;gap:8px;align-items:center;margin-top:8px}
+        .legend span{display:inline-block;width:16px;height:16px;border-radius:4px}
+        .leg-hit{background:var(--ok)}.leg-miss{background:#cfd8e3}.leg-bomb{background:var(--danger)}
+        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);justify-content:center;align-items:center;z-index:1000}
+        .modal.show{display:flex}
+        .modal-content{background:var(--card);padding:24px;border-radius:12px;max-width:400px;box-shadow:0 8px 24px rgba(0,0,0,0.15)}
+        .modal-content h2{margin-top:0;font-size:18px}
+        .modal-content input{width:100%;padding:8px;margin:12px 0;border:1px solid #cfd8e3;border-radius:6px}
+        .modal-content button, .button {
+  display: inline-block;
+  background: #003399;
+  color: #fff;
+  padding: 10px;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+
+}
+        .leaderboard{margin-top:16px;background:#fff;border-radius:8px;padding:8px;box-shadow:0 4px 12px rgba(11,37,64,0.04)}
+        .leaderboard-item{display:flex;justify-content:space-between;padding:8px;font-size:12px;border-bottom:1px solid #eef3fb;align-items:center}
+        .leaderboard-item strong{color:var(--accent)}
+        .lb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px}
+        footer{margin-top:18px;text-align:center;color:#5b6b7a;font-size:13px}
+        .small-muted{font-size:12px;color:#8b98a8}
+        @media(max-width:820px){main{grid-template-columns:1fr} .grid{grid-template-columns:repeat(8,36px)} .cell{width:36px;height:36px}}
+    </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Tebak Kapal & Bom — Mini Game</h1>
+      <div class="controls">
+     <a href ="../download.html" class="button"> Kembali </a>
+          <button id="newBtn">New Game</button>
+        <button id="hintBtn" class="secondary">Paketan Hint</button>
+      </div>
+      
+    </header>
+
+    <main>
+      <section class="board" aria-label="Papan permainan">
+        <div class="grid" id="grid" role="grid"></div>
+      </section>
+
+      <aside class="info">
+        <div class="stat">
+          <div><strong>Langkah:</strong> <span id="moves">0</span></div>
+          <div><strong>Waktu:</strong> <span id="timer">00:00</span></div>
+          <div><strong>Sisa Kapal:</strong> <span id="shipsLeft">0</span></div>
+          <div><strong>Status:</strong> <span id="status">Siap bermain</span></div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #eef3fb"/>
+
+        <div class="small">Aturan singkat:</div>
+        <ol class="small">
+          <li>Klik sel untuk menebak.</li>
+          <li>Jika menemukan kapal → menjadi <strong>hit</strong>.</li>
+          <li>Jika menemukan bom → <strong>meledak</strong> dan permainan berakhir.</li>
+          <li>Tujuan: temukan semua kapal tanpa kena bom.</li>
+        </ol>
+
+        <div class="legend">
+          <div><span class="leg-hit"></span> Hit</div>
+          <div><span class="leg-miss"></span> Miss</div>
+          <div><span class="leg-bomb"></span> Bom (Game Over)</div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #eef3fb"/>
+        <div class="small">Opsi:</div>
+        <div style="display:flex;gap:8px;margin-top:8px"></div>
+          <label style="display:flex;align-items:center;gap:6px"><input type="checkbox" id="revealNearby"/> Tampilkan petunjuk dekat kapal</label>
+        </div>
+
+        <!-- Leaderboard area -->
+         <script type="text/javascript">
+  atOptions = {
+  	'key' : '2f0c4810a6f2eb319a1866ebcd64b888',
+  	'format' : 'iframe',
+  	'height' : 90,
+  	'width' : 728,
+  	'params' : {}
+  };
+</script>
+<br>
+<script
+  type="text/javascript"
+  src="//producerheron.com/2f0c4810a6f2eb319a1866ebcd64b888/invoke.js"
+></script>
+<br>
+        <div class="leaderboard" id="leaderboard">
+          <div class="lb-header">
+            <strong>Leaderboard (berdasarkan skor)</strong>
+            <div class="small-muted" id="lbStatus">Menyinkronkan...</div>
+          </div>
+          <div id="leaderboardList">
+            <!-- items will be rendered here -->
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      Klik kotak, jangan klik bomb! Game sederhana untuk bersenang-senang.
+    </footer>
+  </div>
+
+  <!-- Modal for entering name after game over -->
+  <div class="modal" id="nameModal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Game Over</h2>
+      <div id="modalMessage">Hasil permainan</div>
+      <input id="playerName" type="text" placeholder="Masukkan nama (opsional)" maxlength="30" />
+      <div class="small-muted" style="font-size:12px">Nama hanya boleh huruf, angka, spasi, '-' atau '_' (maks 30).</div>
+      <button id="saveNameBtn">Simpan ke Leaderboard</button>
+    </div>
+  </div>
+
+  <script>
+    /***************** CONFIG: ganti jika perlu *****************/
+    const FIREBASE_BASE_URL = 'https://heroikzreweb-default-rtdb.asia-southeast1.firebasedatabase.app';
+    const FIREBASE_LEADERBOARD_PATH = '/leaderboard/kapalbom'; // akan ditulis ke /leaderboard.json
+    const LB_MAX = 10;
+    /***********************************************************/
+
+    // Game settings
+    const ROWS = 8, COLS = 8;
+    const NUM_SHIPS = 6; // jumlah titik kapal tersebar (sederhana)
+    const NUM_BOMBS = 6;
+
+    // anti-abuse settings (client-side)
+    const MIN_INTERVAL_MS = 10000; // minimal jarak antara submit (10 detik)
+    const MAX_PER_HOUR = 5;        // maksimal submit per jam dari browser ini
+    const DUPLICATE_WINDOW_MS = 30000; // jika kirim entry sama dalam 30s -> anggap duplikat
+    const MIN_NAME_SCORE_TO_FORCE = 0; // kalau mau hanya terima score >= X, ubah di sini
+
+    // state
+    let gridEl = document.getElementById('grid');
+    let movesEl = document.getElementById('moves');
+    let shipsLeftEl = document.getElementById('shipsLeft');
+    let statusEl = document.getElementById('status');
+    let revealNearbyEl = document.getElementById('revealNearby');
+    let timerEl = document.getElementById('timer');
+
+    let moves = 0; let shipsLeft = 0; let gameOver = false;
+    let cells = []; // {el, hasShip, hasBomb, revealed}
+    let lastResult = null; // {won, moves, duration, score, time}
+
+    // timer
+    let startTime = null;
+    let timerInterval = null;
+
+    // modal & leaderboard elements
+    const nameModal = document.getElementById('nameModal');
+    const playerNameInput = document.getElementById('playerName');
+    const saveNameBtn = document.getElementById('saveNameBtn');
+    const modalMessage = document.getElementById('modalMessage');
+    const leaderboardList = document.getElementById('leaderboardList');
+    const lbStatus = document.getElementById('lbStatus');
+
+    // client id for light tracking
+    const CLIENT_ID_KEY = 'kapal_client_id_v1';
+    const SUBMIT_HISTORY_KEY = 'kapal_submit_history_v1';
+
+    // ensure client id
+    function uuidv4(){
+      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
+        return v.toString(16);
+      });
+    }
+    function getClientId(){
+      let id = localStorage.getItem(CLIENT_ID_KEY);
+      if(!id){ id = uuidv4(); localStorage.setItem(CLIENT_ID_KEY, id); }
+      return id;
+    }
+    const CLIENT_ID = getClientId();
+
+    /* ----------------------- game functions (tidy from original) ----------------------- */
+    function createGrid(){
+      gridEl.innerHTML = '';
+      cells = [];
+      for(let r=0;r<ROWS;r++){
+        for(let c=0;c<COLS;c++){
+          const idx = r*COLS + c;
+          const btn = document.createElement('button');
+          btn.className = 'cell';
+          btn.dataset.idx = idx;
+          btn.setAttribute('aria-label', `Cell ${r+1}-${c+1}`);
+          btn.addEventListener('click', onCellClick);
+          gridEl.appendChild(btn);
+          cells.push({el:btn, hasShip:false, hasBomb:false, revealed:false});
+        }
+      }
+    }
+
+    function randomPositions(count, forbidden = new Set()){
+      const res = new Set();
+      while(res.size < count){
+        const v = Math.floor(Math.random() * (ROWS*COLS));
+        if(forbidden.has(v)) continue;
+        res.add(v);
+      }
+      return Array.from(res);
+    }
+
+    function placeObjects(){
+      // clear
+      cells.forEach(c=>{c.hasShip=false;c.hasBomb=false;c.revealed=false;c.el.className='cell';c.el.textContent='';c.el.style.color='transparent';});
+
+      // place ships and bombs but avoid overlap
+      const forbidden = new Set();
+      const ships = randomPositions(NUM_SHIPS, forbidden);
+      ships.forEach(p=>{cells[p].hasShip = true; forbidden.add(p)});
+
+      const bombs = randomPositions(NUM_BOMBS, forbidden);
+      bombs.forEach(p=>{cells[p].hasBomb = true; forbidden.add(p)});
+
+      shipsLeft = NUM_SHIPS;
+      shipsLeftEl.textContent = shipsLeft;
+    }
+
+    function onCellClick(e){
+      if(gameOver) return;
+      const idx = Number(e.currentTarget.dataset.idx);
+      const cell = cells[idx];
+      if(cell.revealed) return;
+
+      // start timer on first move
+      if(!startTime){
+        startTimer();
+      }
+
+      moves += 1; movesEl.textContent = moves;
+      cell.revealed = true;
+      cell.el.classList.add('revealed');
+
+      if(cell.hasBomb){
+        cell.el.classList.add('bomb');
+        cell.el.textContent = '💣';
+        endGame(false, 'Kena bom! Game over.');
+        return;
+      }
+
+      if(cell.hasShip){
+        cell.el.classList.add('hit');
+        cell.el.textContent = '🚢';
+        shipsLeft -= 1; shipsLeftEl.textContent = shipsLeft;
+        if(shipsLeft <= 0){
+          endGame(true, `Selamat! Semua kapal ditemukan dalam ${moves} tebakan.`);
+        } else {
+          statusEl.textContent = 'Kapal kena! Lanjutkan.';
+        }
+      } else {
+        cell.el.classList.add('miss');
+        cell.el.textContent = '•';
+        statusEl.textContent = 'Miss.';
+      }
+
+      if(revealNearbyEl.checked){
+        showNearbyHints(idx);
+      }
+    }
+
+    function showNearbyHints(idx){
+      const r = Math.floor(idx / COLS);
+      const c = idx % COLS;
+      // highlight neighbors that contain ship with small dot
+      for(let dr=-1;dr<=1;dr++){
+        for(let dc=-1;dc<=1;dc++){
+          if(dr===0 && dc===0) continue;
+          const nr = r+dr, nc = c+dc;
+          if(nr<0||nr>=ROWS||nc<0||nc>=COLS) continue;
+          const nidx = nr*COLS + nc;
+          const ncell = cells[nidx];
+          if(!ncell.revealed && ncell.hasShip){
+            // temporary small indicator
+            ncell.el.textContent = '•';
+            ncell.el.style.color = '#ff9800';
+          }
+        }
+      }
+      // clear indicators after short time
+      setTimeout(()=>{
+        cells.forEach(c=>{ if(!c.revealed){ c.el.textContent=''; c.el.style.color='transparent'} });
+      },900);
+    }
+
+    function computeScore(won, moves, durationSec){
+      if(won){
+        // higher is better
+        let base = 1000;
+        let score = base - (moves * 10) - (durationSec * 5);
+        return Math.max(0, Math.round(score));
+      } else {
+        let base = 200;
+        let score = base - (moves * 5) - (durationSec * 2);
+        return Math.max(0, Math.round(score));
+      }
+    }
+
+    function formatTimeSec(sec){
+      const m = Math.floor(sec/60);
+      const s = sec % 60;
+      return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+    }
+
+    function startTimer(){
+      startTime = Date.now();
+      if(timerInterval) clearInterval(timerInterval);
+      timerInterval = setInterval(()=>{
+        const elapsed = Math.floor((Date.now() - startTime)/1000);
+        timerEl.textContent = formatTimeSec(elapsed);
+      }, 250);
+    }
+
+    function stopTimer(){
+      if(timerInterval) clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function endGame(won, message){
+      gameOver = true;
+      stopTimer();
+      statusEl.textContent = message;
+      // reveal all bombs and ships when game over
+      cells.forEach(c=>{
+        if(c.hasBomb && !c.revealed){ c.el.classList.add('bomb'); c.el.textContent = '💣'; c.el.style.color='#fff'; }
+        if(c.hasShip && !c.revealed){ c.el.classList.add('hit'); c.el.textContent = '🚢'; c.el.style.color='#fff'; }
+      });
+
+      const durationSec = startTime ? Math.floor((Date.now() - startTime)/1000) : 0;
+      const score = computeScore(won, moves, durationSec);
+
+      // store last result and show modal to input name
+      lastResult = {
+        won: !!won,
+        moves: moves,
+        duration: durationSec,
+        score: score,
+        time: Date.now()
+      };
+
+      showNameModal(won, `${message} Waktu: ${formatTimeSec(durationSec)} — Skor: ${score}`);
+    }
+
+    function newGame(){
+      moves = 0; movesEl.textContent = moves; statusEl.textContent = 'Siap bermain'; gameOver=false;
+      timerEl.textContent = '00:00';
+      startTime = null;
+      stopTimer();
+      createGrid(); placeObjects();
+    }
+
+    // hint pack: reveal a random safe cell
+    function hintPack(){
+      if(gameOver) return;
+      // find unrevealed non-bomb cell
+      const options = cells.map((c,i)=> ({c,i})).filter(x=>!x.c.revealed && !x.c.hasBomb);
+      if(options.length===0) return;
+      const pick = options[Math.floor(Math.random()*options.length)];
+      // simulate click
+      pick.c.el.click();
+    }
+
+    /* -------------------- Leaderboard local <-> Firebase logic -------------------- */
+
+    // sanitize name: allow letters, numbers, spaces, -, _
+    function sanitizeName(raw){
+      if(!raw) return 'Anonim';
+      let s = String(raw).trim().slice(0,30);
+      // remove disallowed chars
+      s = s.replace(/[^A-Za-z0-9 \-_]/g, '');
+      return s || 'Anonim';
+    }
+
+    // local submit history for rate-limiting
+    function getSubmitHistory(){
+      try{
+        const raw = localStorage.getItem(SUBMIT_HISTORY_KEY);
+        return raw ? JSON.parse(raw) : [];
+      }catch(e){ return []; }
+    }
+    function pushSubmitRecord(ts, score){
+      const arr = getSubmitHistory();
+      arr.push({ts: ts, score: score});
+      // keep only last 100 records
+      const trimmed = arr.slice(-100);
+      try{ localStorage.setItem(SUBMIT_HISTORY_KEY, JSON.stringify(trimmed)); }catch(e){}
+    }
+
+    function countSubmitsLastHour(){
+      const arr = getSubmitHistory();
+      const oneHourAgo = Date.now() - (60*60*1000);
+      return arr.filter(x=>x.ts >= oneHourAgo).length;
+    }
+
+    function lastSubmitTime(){
+      const arr = getSubmitHistory();
+      if(arr.length === 0) return 0;
+      return arr[arr.length-1].ts || 0;
+    }
+
+    function wasDuplicateRecently(score){
+      const arr = getSubmitHistory();
+      const windowStart = Date.now() - DUPLICATE_WINDOW_MS;
+      return arr.some(x => x.ts >= windowStart && x.score === score);
+    }
+
+    async function submitToFirebase(entry){
+      // anti-abuse checks
+      const now = Date.now();
+
+      if(entry.score < MIN_NAME_SCORE_TO_FORCE){
+        return {ok:false, reason:'Skor terlalu rendah untuk dikirim.'};
+      }
+      if(now - lastSubmitTime() < MIN_INTERVAL_MS){
+        return {ok:false, reason:`Tunggu dulu sebelum mengirim lagi (minimal ${MIN_INTERVAL_MS/1000}s).`};
+      }
+      if(countSubmitsLastHour() >= MAX_PER_HOUR){
+        return {ok:false, reason:`Batas pengiriman per jam (${MAX_PER_HOUR}) terlampaui.`};
+      }
+      if(wasDuplicateRecently(entry.score)){
+        return {ok:false, reason:'Terlihat duplikat skor baru-baru ini. Coba lagi nanti.'};
+      }
+
+      // attach clientId
+      entry.clientId = CLIENT_ID;
+
+      // attempt to POST to firebase Realtime DB
+      try{
+        const url = FIREBASE_BASE_URL + FIREBASE_LEADERBOARD_PATH + '.json';
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify(entry),
+        });
+        if(!res.ok){
+          const txt = await res.text();
+          return {ok:false, reason:'Firebase gagal merespons: ' + res.status + ' ' + txt};
+        }
+        const data = await res.json();
+        // record locally
+        pushSubmitRecord(now, entry.score);
+        return {ok:true, key: data.name || null};
+      }catch(err){
+        return {ok:false, reason:'Kesalahan jaringan saat menulis ke Firebase: ' + (err.message || err)};
+      }
+    }
+
+    // fetch leaderboard from firebase and render top LB_MAX
+    async function fetchAndRenderLeaderboard(){
+      lbStatus.textContent = 'Menyinkronkan...';
+      try{
+        const url = FIREBASE_BASE_URL + FIREBASE_LEADERBOARD_PATH + '.json';
+        const res = await fetch(url + '?print=pretty', {cache:'no-store'});
+        if(!res.ok){
+          lbStatus.textContent = 'Gagal sinkron (fetch error)';
+          return renderLocalFallback('Gagal ambil leaderboard dari server.');
+        }
+        const raw = await res.json();
+        if(!raw){
+          lbStatus.textContent = 'Kosong';
+          return renderLocalFallback('Belum ada skor di server.');
+        }
+        // raw is an object with push keys { key1: {...}, key2: {...} }
+        const arr = Object.keys(raw).map(k => {
+          const it = raw[k];
+          return {
+            name: it.name || 'Anonim',
+            won: !!it.won,
+            moves: it.moves || 0,
+            duration: it.duration || 0,
+            score: it.score || 0,
+            time: it.time || Date.now(),
+            clientId: it.clientId || null,
+            _key: k
+          };
+        });
+
+        // sort: higher score first, fewer moves next, recent next
+        arr.sort((a,b)=>{
+          if(a.score !== b.score) return b.score - a.score;
+          if(a.moves !== b.moves) return a.moves - b.moves;
+          return b.time - a.time;
+        });
+
+        const top = arr.slice(0, LB_MAX);
+        renderLeaderboardFromArray(top);
+        lbStatus.textContent = 'Terakhir sinkron';
+      }catch(err){
+        lbStatus.textContent = 'Gagal sinkron';
+        renderLocalFallback('Kesalahan saat mengambil leaderboard: ' + (err.message || err));
+      }
+    }
+
+    function renderLeaderboardFromArray(arr){
+      if(!arr || arr.length === 0){
+        leaderboardList.innerHTML = '<div class="small" style="padding:8px;color:#666">Belum ada skor. Mainkan untuk menambahkan.</div>';
+        return;
+      }
+      leaderboardList.innerHTML = arr.map(it=>{
+        const when = new Date(it.time);
+        const dateStr = when.toLocaleDateString() + ' ' + when.toLocaleTimeString();
+        const timeStr = formatTimeSec(it.duration || 0);
+        return `<div class="leaderboard-item"><div><strong>${escapeHtml(it.name)}</strong> <span style="color:#6c7a89;font-size:11px">(${it.won? 'Menang':'Kalah'})</span></div><div style="text-align:right"><div style="font-weight:700">Skor: ${it.score}</div><div style="font-size:11px;color:#6c7a89">${it.moves} langkah • ${timeStr}</div><div style="font-size:11px;color:#6c7a89">${dateStr}</div></div></div>`;
+      }).join('');
+    }
+
+    function renderLocalFallback(msg){
+      // fallback: tampilkan pesan dan gunakan localstorage (lama)
+      const local = loadLocalLeaderboard();
+      if(local && local.length>0){
+        renderLeaderboardFromArray(local);
+        lbStatus.textContent = (msg ? msg + ' (tampil from local)' : 'Offline (tampil local)');
+      } else {
+        leaderboardList.innerHTML = `<div class="small" style="padding:8px;color:#666">${msg || 'Belum ada skor.'}</div>`;
+        lbStatus.textContent = 'Offline';
+      }
+    }
+
+    /* Legacy local leaderboard functions (keperluan fallback) */
+    const LB_KEY = 'kapalLeaderboard_v1';
+    function loadLocalLeaderboard(){
+      try{
+        const raw = localStorage.getItem(LB_KEY);
+        return raw ? JSON.parse(raw) : [];
+      }catch(e){ return []; }
+    }
+    function saveLocalLeaderboard(lb){
+      try{ localStorage.setItem(LB_KEY, JSON.stringify(lb)); }catch(e){}
+    }
+    function addToLocalLeaderboard(name, result){
+      const lb = loadLocalLeaderboard();
+      const entry = {
+        name: name && name.trim() ? name.trim() : 'Anonim',
+        won: result.won ? true : false,
+        moves: result.moves,
+        duration: result.duration,
+        score: result.score,
+        time: result.time || Date.now()
+      };
+      lb.push(entry);
+      lb.sort((a,b)=>{
+        if(a.score !== b.score) return b.score - a.score;
+        if(a.moves !== b.moves) return a.moves - b.moves;
+        return b.time - a.time;
+      });
+      const trimmed = lb.slice(0, LB_MAX);
+      saveLocalLeaderboard(trimmed);
+    }
+
+    // simple escape to avoid injection in leaderboard display
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+
+    /* -------------------- button wiring & modal -------------------- */
+
+    function showNameModal(won, message){
+      modalMessage.textContent = (won ? 'Menang! ' : 'Kalah. ') + message;
+      playerNameInput.value = '';
+      nameModal.classList.add('show');
+      nameModal.setAttribute('aria-hidden','false');
+      setTimeout(()=>playerNameInput.focus(),50);
+    }
+
+    function hideNameModal(){
+      nameModal.classList.remove('show');
+      nameModal.setAttribute('aria-hidden','true');
+    }
+
+    async function onSaveNameClick(){
+      if(!lastResult){ hideNameModal(); return; }
+      const rawName = playerNameInput.value;
+      const name = sanitizeName(rawName);
+
+      // prepare entry
+      const entry = {
+        name: name,
+        won: !!lastResult.won,
+        moves: lastResult.moves,
+        duration: lastResult.duration,
+        score: lastResult.score,
+        time: lastResult.time || Date.now()
+      };
+
+      // attempt submit to firebase (with anti-abuse)
+      lbStatus.textContent = 'Mengirim...';
+      const result = await submitToFirebase(entry);
+      if(result.ok){
+        lbStatus.textContent = 'Tersimpan di server';
+        // also add local fallback copy
+        addToLocalLeaderboard(name, entry);
+        // re-fetch from server to show up-to-date leaderboard
+        await fetchAndRenderLeaderboard();
+        hideNameModal();
+      } else {
+        // show reason to user but still save locally so score tidak hilang
+        lbStatus.textContent = 'Gagal kirim: ' + result.reason;
+        // save locally as fallback
+        addToLocalLeaderboard(name, entry);
+        renderLocalFallback('Tersimpan lokal: ' + result.reason);
+        hideNameModal();
+      }
+    }
+
+    // wire buttons
+    document.getElementById('newBtn').addEventListener('click', ()=>{ hideNameModal(); newGame(); });
+    document.getElementById('hintBtn').addEventListener('click', hintPack);
+
+    saveNameBtn.addEventListener('click', onSaveNameClick);
+
+    // allow Enter to submit name
+    playerNameInput.addEventListener('keypress', function(e){
+      if(e.key === 'Enter'){ saveNameBtn.click(); }
+    });
+
+    // close modal on outside click
+    nameModal.addEventListener('click', function(e){
+      if(e.target === nameModal){
+        hideNameModal();
+      }
+    });
+
+    /* -------------------- init -------------------- */
+    (async function init(){
+      createGrid();
+      placeObjects();
+      // render local first to avoid empty UI
+      const local = loadLocalLeaderboard();
+      if(local && local.length>0){
+        renderLeaderboardFromArray(local);
+        lbStatus.textContent = 'Tampil lokal';
+      } else {
+        lbStatus.textContent = 'Menunggu sinkron...';
+      }
+      // try fetch server leaderboard (non-blocking)
+      await fetchAndRenderLeaderboard();
+    })();
+
+  </script>
+</body>
+</html>
