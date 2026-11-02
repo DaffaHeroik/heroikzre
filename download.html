@@ -1,238 +1,92 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Download Game</title>
-
-<style>
-    body{
-        margin:0;
-        font-family:Arial, sans-serif;
-        background:#f6f6f6;
-    }
-    .navbar{
-        background:#111;
-        padding:12px;
-        display:flex;
-        gap:20px;
-    }
-    .navbar a{
-        color:white;
-        text-decoration:none;
-        font-size:16px;
-    }
-    
-    /* GRID */
-    .game-grid{
-        display:grid;
-        grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
-        gap:16px;
-        padding:20px;
-    }
-    .game-card{
-        background:white;
-        border-radius:12px;
-        box-shadow:0 2px 8px rgba(0,0,0,0.15);
-        overflow:hidden;
-    }
-    .game-thumb{
-        width:100%;
-        display:block;
-    }
-    .card-body{
-        padding:12px;
-    }
-    .game-title{
-        font-size:18px;
-        font-weight:600;
-    }
-    .game-meta{
-        font-size:14px;
-        color:#777;
-        margin:6px 0;
-        display:flex;
-        justify-content:space-between;
-    }
-    .btn{
-        padding:8px 14px;
-        border:none;
-        cursor:pointer;
-        border-radius:6px;
-        font-size:14px;
-    }
-    .btn-primary{
-        background:#0066ff;
-        color:white;
-    }
-    .btn-outline{
-        background:white;
-        border:1px solid #999;
-    }
-
-    /* Modal Preview */
-    .modal{
-        position:fixed;
-        inset:0;
-        display:none;
-        background:rgba(0,0,0,0.7);
-        justify-content:center;
-        align-items:center;
-        padding:20px;
-    }
-    .modal-content{
-        background:white;
-        padding:20px;
-        border-radius:12px;
-        max-width:500px;
-        width:100%;
-    }
-    .close{
-        float:right;
-        cursor:pointer;
-        font-size:22px;
-    }
-    :root {
-  --primary-color: #003399;
-  --accent-color: #3366cc;
-  --bg-light: #e6f0ff;
-}
-
-.navbar {
-  background-color: #ffffff;
-  padding: 12px 30px;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  z-index: 999;
-  width: 100%;
-}
-
-.navbar a {
-  text-decoration: none;
-  color: var(--accent-color);
-  background-color: var(--bg-light);
-  padding: 10px 22px;
-  border-radius: 12px;
-  transition: all 0.25s ease;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.navbar a:hover {
-  background-color: #cce0ff;
-  color: var(--primary-color);
-  transform: translateY(-2px);
-}
-
-.navbar a.active {
-  background-color: var(--primary-color);
-  color: #ffffff;
-  pointer-events: none;
-}
-
-@media (max-width: 600px) {
-  .navbar {
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .navbar a {
-    width: 48%;
-    text-align: center;
-  }
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heroikzre — Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="site.css">
 </head>
-
 <body>
 
-<!-- NAVBAR (kategori menu tetap ada) -->
-<!-- NAVBAR KATEGORI -->
-<div class="navbar">
-  <a href="index.html">Home</a>
-  <a href="download.html" class="active">Game</a>
-  <a href="profile.html">Profile</a>
-  <a href="profile.html">About</a>
-</div>
+  <header>
+    <nav>
+      <a class="logo" href="index.html">HERO<span>IKZRE</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="pajangan.html">Projects</a></li>
+        <li><a href="kontak.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
 
+  <main>
+    <section class="section">
+      <h1 class="section-title" style="text-align:left;">Game</h1>
+      <p class="page-sub" style="text-align:left;margin-bottom:1.5rem;">Kumpulan game HTML buatan sendiri — langsung main di browser.</p>
 
-
-<!-- GRID GAME -->
-<div class="game-grid">
-
-    <!-- CARD 1 -->
-    <div class="game-card">
-        <img class="game-thumb" src="gambar/kapalbom.png">
-        <div class="card-body">
-            <div class="game-title">Kapal Bom</div>
-            <div class="game-meta">
-                <div>Action</div>
-                <div>2023</div>
+      <div class="cards">
+        <div class="card" style="padding:0;overflow:hidden;">
+          <img src="gambar/kapalbom.png" alt="Kapal Bom" style="width:100%;display:block;">
+          <div style="padding:1rem 1.5rem 1.5rem;">
+            <h3>Kapal Bom</h3>
+            <p>Action · 2023</p>
+            <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+              <a class="btn btn-primary" href="game/kapalbom.html">Main</a>
+              <button class="btn btn-light-ghost" onclick="openPreview('Kapal Bom','gambar/kapalbom.png')">Preview</button>
             </div>
-
-            <a href="game/kapalbom.html">
-                <button class="btn btn-primary" style="width:100%;margin-top:8px;">Main</button>
-            </a>
-
-            <!-- PREVIEW — buka modal simple -->
-            <button class="btn btn-outline" style="width:100%;margin-top:8px;"
-                    onclick="openPreview('Kapal Bom', 'gambar/kapalbom.png')">
-                Preview
-            </button>
+          </div>
         </div>
-    </div>
 
- <div class="game-card">
-        <img class="game-thumb" src="gambar/mathfast.png">
-        <div class="card-body">
-            <div class="game-title">Math Fast</div>
-            <div class="game-meta">
-                <div>Kecerdasan</div>
-                <div>2025</div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <img src="gambar/mathfast.png" alt="Math Fast" style="width:100%;display:block;">
+          <div style="padding:1rem 1.5rem 1.5rem;">
+            <h3>Math Fast</h3>
+            <p>Kecerdasan · 2025</p>
+            <div style="display:flex;gap:0.5rem;margin-top:0.75rem;">
+              <a class="btn btn-primary" href="game/mathfast.html">Main</a>
+              <button class="btn btn-light-ghost" onclick="openPreview('Math Fast','gambar/mathfast.png')">Preview</button>
             </div>
-
-            <a href="game/mathfast.html">
-                <button class="btn btn-primary" style="width:100%;margin-top:8px;">Main</button>
-            </a>
-
-            <!-- PREVIEW — buka modal simple -->
-            <button class="btn btn-outline" style="width:100%;margin-top:8px;"
-                    onclick="openPreview('Kapal Bom', 'gambar/mathfast.png')">
-                Preview
-            </button>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
+  </main>
 
-    <!-- Tambahkan game-card lainnya pakai format yg sama -->
-
-</div>
-
-
-<!-- MODAL -->
-<div class="modal" id="previewModal">
+  <div class="modal" id="previewModal">
     <div class="modal-content">
-        <span class="close" onclick="closePreview()">&times;</span>
-        <h2 id="previewTitle"></h2>
-        <img id="previewImage" style="width:100%;border-radius:10px;margin-top:10px;">
+      <span class="close" onclick="closePreview()">&times;</span>
+      <h2 id="previewTitle" style="font-family:'Space Grotesk',sans-serif;"></h2>
+      <img id="previewImage" style="width:100%;border-radius:10px;margin-top:10px;">
     </div>
-</div>
+  </div>
 
+  <footer>
+    <p>&copy; 2026 Heroikzre</p>
+  </footer>
 
-<script>
-function openPreview(title, img){
-    document.getElementById("previewTitle").innerText = title;
-    document.getElementById("previewImage").src = img;
-    document.getElementById("previewModal").style.display = "flex";
-}
-function closePreview(){
-    document.getElementById("previewModal").style.display = "none";
-}
-</script>
+  <style>
+    .modal { position: fixed; inset: 0; display: none; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; padding: 20px; z-index: 2000; }
+    .modal-content { background: #fff; padding: 20px; border-radius: 12px; max-width: 500px; width: 100%; }
+    .close { float: right; cursor: pointer; font-size: 24px; color: var(--text-soft); }
+  </style>
+
+  <script>
+    function openPreview(title, img){
+      document.getElementById("previewTitle").innerText = title;
+      document.getElementById("previewImage").src = img;
+      document.getElementById("previewModal").style.display = "flex";
+    }
+    function closePreview(){
+      document.getElementById("previewModal").style.display = "none";
+    }
+    document.getElementById("previewModal").addEventListener("click", function(e){
+      if(e.target === this) closePreview();
+    });
+  </script>
 
 </body>
 </html>
