@@ -112,8 +112,69 @@
     <a href="profile.html" class ="button">Profil</a>
   </div>
 <main>
-  <h1>Halaman Pamer</h1>
-  <p>Gak ada yang bisa dipamerin , dia aja belum dapet @.@</p>
+  <h1>Live Projects — Malawali Ecosystem</h1>
+  <p>Semua project di bawah ini <strong>online, berfungsi, dan bisa diakses publik</strong>. Dibuat & dikeprakan sendiri.</p>
+
+  <style>
+    .pj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 24px; }
+    .pj-card {
+      background: #fff; border: 1px solid #dbe2f0; border-radius: 12px; padding: 20px;
+      text-align: left; transition: all 0.25s ease; display: block; color: #223;
+      text-decoration: none;
+    }
+    .pj-card:hover { border-color: #3366cc; box-shadow: 0 8px 24px rgba(51,102,204,0.18); transform: translateY(-3px); }
+    .pj-card h3 { margin: 0 0 6px; color: #0d1d6c; }
+    .pj-card .tag { display: inline-block; font-size: 12px; font-weight: 700; color: #3366cc; background: #e6f0ff; border-radius: 20px; padding: 3px 10px; margin-bottom: 8px; }
+    .pj-card p { margin: 6px 0 10px; font-size: 14px; color: #445; line-height: 1.5; }
+    .pj-card .url { font-family: monospace; font-size: 12px; color: #0d1d6c; word-break: break-all; }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #22c55e; margin-right: 6px; vertical-align: middle; }
+  </style>
+
+  <div class="pj-grid">
+    <a class="pj-card" href="https://malawali.ai.id" target="_blank" rel="noopener">
+      <span class="tag">Portal</span>
+      <h3><span class="status-dot"></span>Malawali — Ekosistem Digital</h3>
+      <p>Landing page ekosistem: PPOB, Payment Gateway QRIS, REST API, Music & AI Router dalam satu pintu.</p>
+      <div class="url">malawali.ai.id</div>
+    </a>
+
+    <a class="pj-card" href="https://app.malawali.ai.id" target="_blank" rel="noopener">
+      <span class="tag">PPOB & SMM</span>
+      <h3><span class="status-dot"></span>Malawali Payment — Aplikasi PPOB & SMM</h3>
+      <p>Panel PPOB (pulsa, token, topup game, bill) & SMM dengan deposit QRIS, dibangun full-stack sendiri.</p>
+      <div class="url">app.malawali.ai.id</div>
+    </a>
+
+    <a class="pj-card" href="https://router.malawali.ai.id" target="_blank" rel="noopener">
+      <span class="tag">AI / Proxy</span>
+      <h3><span class="status-dot"></span>Malawali Router — 1 API Key, Semua Model AI</h3>
+      <p>REST API agregator model AI: satu endpoint Anthropic-compatible untuk banyak provider & model.</p>
+      <div class="url">router.malawali.ai.id</div>
+    </a>
+
+    <a class="pj-card" href="https://music.malawali.ai.id" target="_blank" rel="noopener">
+      <span class="tag">PWA</span>
+      <h3><span class="status-dot"></span>MalaMusic — Music Player</h3>
+      <p>Web music player PWA berbasis YouTube Music dengan backend Express + Firebase.</p>
+      <div class="url">music.malawali.ai.id</div>
+    </a>
+
+    <a class="pj-card" href="https://api.malawali.ai.id" target="_blank" rel="noopener">
+      <span class="tag">REST API</span>
+      <h3><span class="status-dot"></span>Malawali Payment REST API</h3>
+      <p>API payment gateway QRIS (create, cek status, mutasi) — endpoint publik dengan autentikasi.</p>
+      <div class="url">api.malawali.ai.id</div>
+    </a>
+
+    <a class="pj-card" href="https://github.com/DaffaHeroik" target="_blank" rel="noopener">
+      <span class="tag">Source</span>
+      <h3>GitHub — DaffaHeroik</h3>
+      <p>Source code & arsip proyek: gateway, bot, mobile, hingga VPS automation.</p>
+      <div class="url">github.com/DaffaHeroik</div>
+    </a>
+  </div>
+
+  <p style="margin-top:20px">Catatan: domain lama <code>malawalipayment.web.id</code> masih jalan & di-redirect ke ekosistem baru — semua service tetap bisa diakses dari dua domain.</p>
 </main>
   <script>
     window.onload = function() {
