@@ -43,7 +43,7 @@
     hero.addEventListener('mouseleave', () => { mouse.x = mouse.y = -9999; });
 
     let glow = document.createElement('div');
-    glow.style.cssText = 'position:absolute;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:0;opacity:.35;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(37,99,235,.35) 0%,transparent 65%);left:50%;top:40%;transition:opacity .4s;';
+    glow.style.cssText = 'position:absolute;width:420px;height:420px;border-radius:50%;pointer-events:none;z-index:0;opacity:.35;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(230,36,41,.30) 0%,transparent 65%);left:50%;top:40%;transition:opacity .4s;';
     hero.appendChild(glow);
     hero.addEventListener('mousemove', e => {
       const b = hero.getBoundingClientRect();
@@ -61,7 +61,7 @@
         if (p.y < 0 || p.y > H) p.vy *= -1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(96,140,255,0.55)';
+        ctx.fillStyle = 'rgba(255,94,101,0.6)';
         ctx.fill();
       }
       // garis antar partikel dekat
@@ -74,7 +74,7 @@
             ctx.beginPath();
             ctx.moveTo(a.x, a.y);
             ctx.lineTo(b.x, b.y);
-            ctx.strokeStyle = 'rgba(96,140,255,' + (0.14 * (1 - d / (110 * 110))) + ')';
+            ctx.strokeStyle = 'rgba(255,94,101,' + (0.14 * (1 - d / (110 * 110))) + ')';
             ctx.lineWidth = 0.7;
             ctx.stroke();
           }
@@ -88,7 +88,7 @@
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
-          ctx.strokeStyle = 'rgba(140,170,255,' + (0.35 * (1 - d / 150)) + ')';
+          ctx.strokeStyle = 'rgba(80,130,255,' + (0.35 * (1 - d / 150)) + ')';
           ctx.lineWidth = 1;
           ctx.stroke();
         }

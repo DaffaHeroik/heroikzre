@@ -1,13 +1,19 @@
 /* ===== HEROIKZRE — style terpadu (tema putih elegan) ===== */
 :root {
   --bg: #ffffff;
-  --bg-soft: #f7f8fa;
-  --bg-dark: #0f1117;
+  --bg-soft: #fbf7f4;
+  --bg-dark: #0d1120;
   --text: #1a1d24;
   --text-soft: #5b616e;
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --border: #e5e8ef;
+  --accent: #e62429;        /* spidey red */
+  --accent-2: #1c48d4;      /* spidey blue */
+  --accent-soft: #fdecec;
+  --accent-soft-2: #e9f0ff;
+  --accent-hover: #c81e24;
+  --border: #ece6e2;
+  /* jaring laba-laba: pojok kiri-atas (mirip sudut web) */
+  --web-tl: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300' fill='none' stroke='white' stroke-opacity='0.16'><g stroke-width='2'><path d='M0 0 H300 M0 0 L300 300 M0 0 L280 80 M0 0 L190 150 M0 0 L80 280'/></g><g stroke='white' stroke-opacity='0.1' stroke-width='1.4'><path d='M0 110 A110 110 0 0 1 110 0'/><path d='M0 180 A180 180 0 0 1 180 0'/><path d='M0 250 A250 250 0 0 1 250 0'/></g></svg>");
+  --web-br: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300' viewBox='0 0 300 300' fill='none' stroke='white' stroke-opacity='0.16'><g stroke-width='2'><path d='M300 300 H0 M300 300 L0 0 M300 300 L20 220 M300 300 L110 150 M300 300 L220 20'/></g><g stroke='white' stroke-opacity='0.1' stroke-width='1.4'><path d='M300 190 A110 110 0 0 0 190 300'/><path d='M300 120 A180 180 0 0 0 120 300'/><path d='M300 50 A250 250 0 0 0 50 300'/></g></svg>");
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
@@ -46,7 +52,7 @@ nav {
 .nav-links a:hover { color: var(--text); }
 .nav-links a.active { color: var(--accent); font-weight: 600; }
 
-/* Hero (gelap elegan, teks putih) */
+/* Hero (gelap spidey: merah-biru, teks putih) */
 .hero {
   background: var(--bg-dark);
   color: #fff;
@@ -55,10 +61,21 @@ nav {
   position: relative;
   overflow: hidden;
 }
+/* jaring laba-laba di pojok */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: var(--web-tl), var(--web-br);
+  background-repeat: no-repeat;
+  background-position: top left, bottom right;
+  pointer-events: none;
+}
 .hero::after {
   content: '';
   position: absolute; inset: 0;
-  background: radial-gradient(ellipse at 50% 120%, rgba(37,99,235,0.25), transparent 60%);
+  background:
+    radial-gradient(ellipse at 15% 115%, rgba(230,36,41,0.28), transparent 55%),
+    radial-gradient(ellipse at 85% 115%, rgba(28,72,212,0.30), transparent 55%);
   pointer-events: none;
 }
 .hero h1 {
@@ -73,7 +90,12 @@ nav {
   font-size: 1.1rem;
   max-width: 640px; margin-left: auto; margin-right: auto;
 }
-.hero .highlight { color: #fff; }
+/* teks "Heroikzre" highlight = merah spidey, miring dikit ala comic */
+.hero .highlight {
+  color: #ff4d52;
+  font-style: italic;
+  text-shadow: 2px 2px 0 rgba(28,72,212,0.65);
+}
 
 /* Layout */
 main > .section, section.section {
@@ -108,13 +130,13 @@ main > .section, section.section {
 }
 .card:hover {
   border-color: var(--accent);
-  box-shadow: 0 8px 24px rgba(37,99,235,0.10);
+  box-shadow: 0 8px 24px rgba(230,36,41,0.12);
   transform: translateY(-3px);
 }
 .card-icon {
   width: 40px; height: 40px;
   border-radius: 10px;
-  background: #eff4ff;
+  background: var(--accent-soft);
   color: var(--accent);
   display: flex; align-items: center; justify-content: center;
   margin-bottom: 1rem;
@@ -127,7 +149,7 @@ main > .section, section.section {
 .card .tag {
   display: inline-block;
   font-size: 0.72rem; font-weight: 600;
-  color: var(--accent); background: #eff4ff;
+  color: var(--accent); background: var(--accent-soft);
   border-radius: 20px; padding: 2px 10px;
   margin-bottom: 0.6rem; letter-spacing: 0.4px;
 }
